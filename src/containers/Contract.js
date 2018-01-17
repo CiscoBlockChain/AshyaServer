@@ -1,26 +1,24 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { getAddresses } from '../actions'
 import Body from '../components/Body'
-import Web3 from 'web3'
 
 class Contract extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      addresses : [],
+      addresses : this.props.addresses || [],
     }
   }
 
   componentDidMount() {
-    var w3 = new Web3(new Web3.providers.HttpProvider('http://127.0.0.1:8545'));
-    if(!w3.isConnected()) {
-      console.log("not connected");
-    } else {
-      console.log("connected");
-      console.log(w3.eth.accounts)
-      this.setState({
-        addresses: w3.eth.accounts,
-      })
-    }
+    this.props.getAddresses()
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      addresses: nextProps.addresses || [],
+    })
   }
 
   render() {
@@ -32,4 +30,16 @@ class Contract extends Component {
   }
 }
 
-export default Contract
+
+const mapStateToProps = (state, ownProps) => ({
+  addresses: state.blockchain.addresses,
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  getAddresses: () => dispatch(getAddresses()),
+})
+
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps)(Contract)

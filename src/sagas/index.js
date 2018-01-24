@@ -101,6 +101,7 @@ export function* get_addresses() {
 	}
 ];
 
+  // https://medium.com/@tmyjoe/dapps-how-to-get-elements-of-array-in-a-contract-c61b16b6c438
   var MyContract = w3.eth.contract(abiArray);
   var contractAddress = "0x461f7eb8a0ffc0a0098c5eeedf52fa79af725616";
   var registry = MyContract.at(contractAddress);

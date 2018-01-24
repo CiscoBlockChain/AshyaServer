@@ -15,6 +15,7 @@ class Contract extends Component {
     this.props.getAddresses()
   }
 
+  // get more examples: https://github.com/katopz/web3-react-example/blob/master/src/App.js
   componentWillReceiveProps(nextProps) {
     this.setState({
       addresses: nextProps.addresses || [],

@@ -15,7 +15,7 @@ export function* get_addresses() {
     return yield put(actions.gotError("not connected to blockchain"))
   } 
 
-    var abiArray = [
+  var abiArray = [
 	{
 		"constant": true,
 		"inputs": [
@@ -31,8 +31,16 @@ export function* get_addresses() {
 				"type": "string"
 			},
 			{
-				"name": "val",
+				"name": "loc",
 				"type": "string"
+			},
+			{
+				"name": "Url",
+				"type": "string"
+			},
+			{
+				"name": "add",
+				"type": "address"
 			}
 		],
 		"payable": false,
@@ -61,16 +69,16 @@ export function* get_addresses() {
 				"type": "string"
 			},
 			{
-				"name": "iid",
-				"type": "uint16"
-			},
-			{
 				"name": "url",
 				"type": "string"
 			},
 			{
 				"name": "val",
 				"type": "string"
+			},
+			{
+				"name": "Add",
+				"type": "address"
 			}
 		],
 		"name": "addItem",
@@ -99,11 +107,10 @@ export function* get_addresses() {
 		"stateMutability": "nonpayable",
 		"type": "constructor"
 	}
-];
-
+] ;
   // https://medium.com/@tmyjoe/dapps-how-to-get-elements-of-array-in-a-contract-c61b16b6c438
   var MyContract = w3.eth.contract(abiArray);
-  var contractAddress = "0x461f7eb8a0ffc0a0098c5eeedf52fa79af725616";
+  var contractAddress = "0x72487018a021e66fdd3f18c92f4575faffed9e36";
   var registry = MyContract.at(contractAddress);
   const numOfElements = registry.countItemList();
   console.log("number of elements = " + numOfElements)
@@ -113,7 +120,6 @@ export function* get_addresses() {
     console.log(elem);
     results.push(elem);
   }
-  console.log("contracdt instances are: " + results)
   return yield put(actions.gotAddresses(results))
 } 
 

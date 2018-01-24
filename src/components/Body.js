@@ -13,13 +13,15 @@ const Body = ({addresses}) => (
             <th scope="col">URL</th>
           </thead>
           <tbody>
-            { addresses.map( (a) => 
+            { addresses.map( (a, index) => 
+                //string iname, string loc, string Url, address add)
                 Array.isArray(a) ?  
                   <tr key={a}>
-                    <th scope="row">x</th>
-                    <td>xyz</td>
+                    <th scope="row">{ index }</th>
+                    <td>{ a[3] }</td>
                     <td>{ a[0] }</td>
                     <td>{ a[1] }</td>
+                    <td>{ a[2] }</td>
                   </tr>
                   :
                   <tr key={a}><th scope="row">{ a }</th></tr>

@@ -1,28 +1,27 @@
-pragma solidity ^0.4.0;
+pragma solidity ^0.4.19;
 
-contract ItemListContract {
+contract AshyaRegistry {
     struct item {
         
         string iname;
-        uint16 itemid;
         string url;
         string location;
         address Address;
     }
 
-    uint itemCount;
+    uint16 itemCount;
     mapping(uint16 => item) itemList;
     item[] itemArray;
 
-    function ItemListContract() public {
+    function AshyaRegistry() public {
         log0('hi');
+        itemCount = 0;
     }
 
-    function addItem(string name, uint16 iid, string url, string val,address Add) public {        
-        var itemnew = item(name, iid ,url, val,Add);
-        itemList[iid] = itemnew;
+    function addItem(string name, string url, string val,address Add) public {        
+        var itemnew = item(name ,url, val,Add);
+        itemList[itemCount++] = itemnew;
         itemArray.push(itemnew);
-        itemCount++;
     }
 
     function countItemList()public constant returns (uint count) {     
@@ -39,3 +38,4 @@ contract ItemListContract {
     }
 
 }
+

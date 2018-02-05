@@ -6,9 +6,6 @@ const NavBar = () => (
     <a className="navbar-brand" href="">
       <img className="d-inline-block " alt="cisco" src="/images/logo-white.png" height="20px" />
     </a>
-    <span class="navbar-text">
-     KOVAN-Testnet
-   </span>
     <span className="navbar-text">
       Ashya
     </span>

@@ -16,7 +16,7 @@ body{
   letter-spacing: 1px;
   margin-left: 40px;
   float: left;
-
+   
 }
 
 a .fa {
@@ -53,10 +53,6 @@ a .fa {
 
 .pointer {
   cursor: pointer;
-}
-
-.footer{
- position: absolute; right: 0; bottom: 0;
 }
 
 /*
@@ -123,7 +119,7 @@ Feedback field
     position: relative;
     text-align: center;
     top:200px;
-    background:rgba(0, 0, 0, 0.4);
+    background:rgba(0, 0, 0, 0.4); 
     width: 550px;
     height: 225px;
     color: white;

@@ -55,10 +55,19 @@ a .fa {
   cursor: pointer;
 }
 
-.footer{
- position: absolute; right: 0; bottom: 0;
+.span1
+{
+height:8%;
+ width:11%;
+ text-align: center;
+ background-color:#B0C4DE;
+ margin: 15px 25px;
+ position: absolute;
+ bottom:0; right:0;
+ display: inline-block  ;
+ border: 8px solid 	#B0C4DE;
+ border-radius: 100px;
 }
-
 /*
 Feedback field
 */

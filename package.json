@@ -10,6 +10,7 @@
   "dependencies": {
     "prop-types": "^15.5.10",
     "react": "^15.5.0",
+    "react-body-images": "^1.0.1",
     "react-dom": "^15.5.0",
     "react-redux": "^5.0.5",
     "redux": "^3.5.2",

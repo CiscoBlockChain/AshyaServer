@@ -29,13 +29,13 @@ contract AshyaRegistry {
     }
 
     function removeItem(uint16 id) public {
+        //TODO: make sure only owners and device owners can delete device.
         delete itemArray[id];
         itemCount--;
     }
     
-    function getItem(uint16 id)public constant returns (string iname, string loc, string Url, address add) {   
-        return (itemArray[id].iname, itemArray[id].location, itemArray[id].url,itemArray[id].Address);
+    function getItem(uint16 id)public constant returns (string name, string url, string location, address add) {   
+        return (itemArray[id].iname, itemArray[id].url, itemArray[id].location, itemArray[id].Address);
     }
-
 }
 

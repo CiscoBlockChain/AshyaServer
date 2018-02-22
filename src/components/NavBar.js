@@ -1,6 +1,6 @@
 import React from 'react'
 
-const NavBar = () => (
+const NavBar = ({contract}) => (
   <nav className="navbar navbar-expand-lg navbar-inverse bg-inverse">
     <div className="container">
     <a className="navbar-brand" href="">
@@ -17,8 +17,8 @@ const NavBar = () => (
         <a className="nav-item nav-link" href="https://github.com/CiscoBlockChain/AshyaServer">
           <i className="fa fa-file-text-o" aria-hidden="true"></i>
         </a>
-        <a className="nav-item nav-link" href="https://kovan.etherscan.io/address/0x461f7eb8a0ffc0a0098c5eeedf52fa79af725616#code">
-          <i className="fa fa-code" aria-hidden="true"></i>
+        <a className="nav-item nav-link" href={ "https://kovan.etherscan.io/address/" + contract +"#code"}>
+          <i className="fa fa-code" aria-hidden="true"></i> { contract }
         </a>
       </div>
     </div>

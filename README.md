@@ -1,5 +1,5 @@
 # Ashya Server
-
+A decentralized IOT devices registry  web service, using ethereum Blockchain and Web3.js.
 
 ## Development
 

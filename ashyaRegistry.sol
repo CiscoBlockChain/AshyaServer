@@ -1,30 +1,37 @@
 pragma solidity ^0.4.19;
 
+contract AshyaDevice
+{
+address constant AshyaAdress = //put Ashya registry address;
+function AddAd(string name, string Add, string location, address cntAdd)public payable
+{
+AshyaRegistry DeviceObj = AshyaRegistry(AshyaAdress);
+DeviceObj.addItem(name,Add,location,cntAdd);
+
+}
+}
 contract AshyaRegistry {
-    
     struct item {
+        
         string iname;
         string url;
         string location;
-        address owner;
+        address Address;
     }
-    
+
     uint16 itemCount;
-    mapping(uint16 => item)public itemList;
+    mapping(uint16 => item) itemList;
+    item[] itemArray;
 
     function AshyaRegistry() public {
-        item memory newItem = item({iname:"", url:"", location:"",owner: msg.sender});
+        log0('hi');
         itemCount = 0;
     }
 
-    function addItem(string name, string url, string val,address owner) public {        
-        var itemnew = itemList[itemCount];
-        require(msg.sender == owner);
-        itemnew.iname = name;
-        itemnew.url = url;
-        itemnew.location = val;
-        itemnew.owner = owner;
-        itemCount++;  
+    function addItem(string name, string url, string val,address Add) public {        
+        var itemnew = item(name ,url, val,Add);
+        itemList[itemCount++] = itemnew;
+        itemArray.push(itemnew);
     }
 
     function countItemList()public constant returns (uint count) {     
@@ -32,14 +39,12 @@ contract AshyaRegistry {
     }
 
     function removeItem(uint16 id) public {
-        if(itemList[id].owner != msg.sender)
-            return;
-        
-        delete itemList[id];
-        itemCount--;  
+        //TODO: make sure only owners and device owners can delete device.
+        delete itemArray[id];
+        itemCount--;
     }
     
     function getItem(uint16 id)public constant returns (string name, string url, string location, address add) {   
-        return (itemList[id].iname, itemList[id].url, itemList[id].location, itemList[id].owner);
-    }    
+        return (itemArray[id].iname, itemArray[id].url, itemArray[id].location, itemArray[id].Address);
+    }
 }

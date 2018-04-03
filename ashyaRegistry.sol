@@ -1,15 +1,4 @@
 pragma solidity ^0.4.19;
-
-contract AshyaDevice
-{
-address constant AshyaAdress = //put Ashya registry address;
-function AddAd(string name, string Add, string location, address cntAdd)public payable
-{
-AshyaRegistry DeviceObj = AshyaRegistry(AshyaAdress);
-DeviceObj.addItem(name,Add,location,cntAdd);
-
-}
-}
 contract AshyaRegistry {
     struct item {
         

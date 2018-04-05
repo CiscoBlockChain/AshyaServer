@@ -51,9 +51,9 @@ contract AshyaRegistry {
         return itemIndex.length;
     }
 
-    function checkOwnership(address itemAddress) public{
-        require(msg.sender == itemList[itemAddress].ownerAddress || msg.sender == address(this));
-    }
+  //  function checkOwnership(address itemAddress) public{
+    //    require(msg.sender == itemList[itemAddress].ownerAddress || msg.sender == address(this));
+    //}
 
     function removeItem(address _itemAddress)public
     onlyBy(_itemAddress)

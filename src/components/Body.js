@@ -16,11 +16,10 @@ const Body = ({addresses}) => (
             { addresses.map( (a, index) => 
                 //string iname, string loc, string Url, address add)
                 Array.isArray(a) ?  
-                  <tr key={a}>
+                  <tr key={index}>
                     <th scope="row">{ index }</th>
-                    <td>{ a[3] }</td>
+                    <td>{ a[4] }</td>
                     <td>{ a[0] }</td>
-                    <td>{ a[1] }</td>
                     <td>{ a[2] }</td>
                   </tr>
                   :

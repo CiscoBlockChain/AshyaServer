@@ -15,13 +15,16 @@ export function* get_addresses() {
   var MyContract = w3.eth.contract(abiArray);
   var contractAddress = contract.address;
   var registry = MyContract.at(contractAddress);
-  const numOfElements = registry.countItemList();
+  const numOfElements = registry.getItemCount();
   console.log("number of elements = " + numOfElements)
   const results  = [];
   for (let i = 0; i < numOfElements; i++) {
-    const elem = registry.getItem(i);
-    console.log(elem);
-    results.push(elem);
+    const addr = registry.getItemAtIndex(i);
+    console.log(addr);
+    const item = registry.getItem(addr)
+    console.log(item);
+    results.push(item);
+    console.log(results);
   }
   return yield put(actions.gotAddresses(results))
 } 

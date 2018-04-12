@@ -1,14 +1,35 @@
 pragma solidity ^0.4.19;
 
+contract AshyaDevice {
+    
+    // The address must match the one of the newly created AshyaRegistry Contract 
+    address constant AshyaRegistryAddress=0x9dd1e8169e76a9226b07ab9f85cc20a5e1ed44dd;
+
+    function AshyaDevice(string name, string location, string url, address ownerAddress) public payable {
+        AshyaRegistry DeviceObj = AshyaRegistry(AshyaRegistryAddress);
+        return DeviceObj.addItem(name,location,url, address(this), ownerAddress);  }
+    
+    function addNewUrl(string url) public {
+        AshyaRegistry DeviceObj = AshyaRegistry(AshyaRegistryAddress);
+        DeviceObj.addUrl(address(this), url);
+    }
+    
+    function removeUrl(string url) public {
+        AshyaRegistry DeviceObj = AshyaRegistry(AshyaRegistryAddress);
+        DeviceObj.removeUrl(address(this), url);
+    }
+}
+
 contract AshyaRegistry {
     struct item {
         
         string iname;
         string location;
-        string url;
+        string[] urls;
         address ownerAddress;
         uint index;
-    }
+        
+        }   
 
     mapping(address => item) itemList;
     address[] itemIndex;
@@ -24,7 +45,7 @@ contract AshyaRegistry {
         //var itemnew = item(name ,url, location, itemAddress);
         itemList[itemAddress].iname = name;
         itemList[itemAddress].location = location;
-        itemList[itemAddress].url = url;
+        itemList[itemAddress].urls.push(url);
         itemList[itemAddress].ownerAddress = ownerAddress; 
         itemList[itemAddress].index = itemIndex.push(itemAddress)-1;
         
@@ -41,29 +62,40 @@ contract AshyaRegistry {
         return itemIndex.length;
     }
     
-    function checkOwnership(address itemAddress) public{
-        require(msg.sender == itemList[itemAddress].ownerAddress || msg.sender == address(this));
-    } 
+    modifier onlyBy(address _itemAddress) {
+        require(msg.sender == itemList[_itemAddress].ownerAddress || msg.sender == address(this));
+        _;
+    }
+    
+//    function checkOwnership(address itemAddress) public{
+//        require(msg.sender == itemList[itemAddress].ownerAddress || msg.sender == address(this));
+//    } 
 
-    function removeItem(address itemAddress) public {
-        checkOwnership(itemAddress);
-        uint rowToDelete = itemList[itemAddress].index;
+    function removeItem(address _itemAddress) public onlyBy(_itemAddress) {
+        //checkOwnership(itemAddress);
+        uint rowToDelete = itemList[_itemAddress].index;
         address keyToMove = itemIndex[itemIndex.length-1];
         itemIndex[rowToDelete] = keyToMove;
         itemList[keyToMove].index = rowToDelete;
         itemIndex.length--;
         LogDeleteItem(
-            itemAddress,
+            _itemAddress,
             rowToDelete);
-        
     }
     
-    function getItem(address itemAddress)public constant returns (string name, string url, string location, uint index, address ownerAddress) {   
-        return (itemList[itemAddress].iname, itemList[itemAddress].url, itemList[itemAddress].location, itemList[itemAddress].index, itemList[itemAddress].ownerAddress);
+    function getItem(address itemAddress)public constant returns (string name, uint url, string location, uint index, address ownerAddress) {   
+        return (itemList[itemAddress].iname, itemList[itemAddress].urls.length, itemList[itemAddress].location, itemList[itemAddress].index, itemList[itemAddress].ownerAddress);
     }
     
     function getItemAtIndex(uint index) public constant returns(address itemAddress) {
         return itemIndex[index];
     }
+    
+    function addUrl(address itemAddress, string url) public {
+        itemList[itemAddress].urls.push(url);
+    }
+    
+    function removeUrl(address itemAddress, string url) public {
+        // need to be done
+    }
 }
-

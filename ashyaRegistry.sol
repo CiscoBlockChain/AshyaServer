@@ -1,7 +1,7 @@
 pragma solidity ^0.4.19;
 
 contract AshyaDevice {
-<<<<<<< HEAD
+
     
     // The address must match the one of the newly created AshyaRegistry Contract 
     address constant AshyaRegistryAddress=0x9dd1e8169e76a9226b07ab9f85cc20a5e1ed44dd;
@@ -20,16 +20,7 @@ contract AshyaDevice {
         DeviceObj.removeUrl(address(this), url);
     }
 }
-=======
 
-    // The address must match the one of the newly created AshyaRegistry Contract
-    address AshyaRegistryAddress =0x0b82c07734911ff51eee41307b9c7f939f2ebd70;
-
-    function AshyaDevice(string name, string location, string url, address ownerAddress) public payable {
-        AshyaRegistry DeviceObj = AshyaRegistry(AshyaRegistryAddress);
-        DeviceObj.addItem(name,location,url, address(this), ownerAddress);  }
-    }
->>>>>>> fb2b0a02186a1b6374843eb143adb443e5e9073e
 
 contract AshyaRegistry {
     struct item {

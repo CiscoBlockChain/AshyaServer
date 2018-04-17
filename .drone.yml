@@ -4,7 +4,8 @@ pipeline:
   docker:
     image: plugins/docker
     repo: ashya/ashya-server
-    secrets: [docker_username, docker_password]
+    user: ashya
+    secrets: [docker_password]
 
   # bring up our test machine so it has the latest API. 
   ssh:

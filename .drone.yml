@@ -18,6 +18,9 @@ pipeline:
       - docker rm -f ashya-server || true
       - docker pull ashya/ashya-server
       - docker run -p 5000:5000 -d --name ashya-server ashya/ashya-server
+    environment:
+      - https_proxy=proxy.esl.cisco.com:80
+      - http_proxy=proxy.esl.cisco.com:80
 
   # use Cisco Spark to notify that build was successful. 
   #notify:

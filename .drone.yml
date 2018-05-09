@@ -8,27 +8,27 @@ pipeline:
     secrets: [docker_username, docker_password]
 
   # bring up our test machine so it has the latest API. 
-  ssh:
-    image: appleboy/drone-ssh
-    host: ashya.io 
-    username: root
-    port: 22
-    secrets: [ ssh_password ]
-    script: 
-      - docker rm -f ashya-server || true
-      - docker pull ashya/ashya-server
-      - docker run -p 5000:5000 -d --name ashya-server ashya/ashya-server
+#  ssh:
+#    image: appleboy/drone-ssh
+#    host: ashya.io 
+#    username: root
+#    port: 22
+#    secrets: [ ssh_password ]
+#    script: 
+#      - docker rm -f ashya-server || true
+#      - docker pull ashya/ashya-server
+#      - docker run -p 5000:5000 -d --name ashya-server ashya/ashya-server
+#    environment:
+#      - https_proxy=proxy.esl.cisco.com:80
+#      - http_proxy=proxy.esl.cisco.com:80
+
+  # use Cisco Spark to notify that build was successful. 
+  notify:
+    image: vallard/drone-spark
+    room: "📦🔗 IOT"
     environment:
       - https_proxy=proxy.esl.cisco.com:80
       - http_proxy=proxy.esl.cisco.com:80
-
-  # use Cisco Spark to notify that build was successful. 
-  #notify:
-  #  image: vallard/drone-spark
-  #  room: "KUBAM Feedback"
-  #  environment:
-  #    - https_proxy=proxy.esl.cisco.com:80
-  #    - http_proxy=proxy.esl.cisco.com:80
-  #  secrets: [ SPARK_TOKEN ]
-  #  when:
-  #    status: [success, failure]
+    secrets: [ SPARK_TOKEN ]
+    when:
+      status: [success, failure]

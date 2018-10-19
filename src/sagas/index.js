@@ -16,13 +16,11 @@ export function* get_addresses() {
   var contractAddress = contract.address;
   var registry = MyContract.at(contractAddress);
   const numOfElements = registry.getItemCount();
-  console.log("number of elements = " + numOfElements)
   const results  = [];
   for (let i = 0; i < numOfElements; i++) {
     const addr = registry.getItemAtIndex(i);
-    console.log(addr);
     const item = registry.getItem(addr)
-    console.log(item);
+    item.push(addr);
     results.push(item);
     console.log(results);
   }

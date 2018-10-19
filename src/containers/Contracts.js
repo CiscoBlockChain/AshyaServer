@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { getAddresses } from '../actions'
-import Body from '../components/Body'
+import Home from '../components/Home'
 
-class Contract extends Component {
+class Contracts extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -25,7 +25,7 @@ class Contract extends Component {
   render() {
     return (
     <div>
-      <Body addresses={this.state.addresses}/>
+      <Home addresses={this.state.addresses}/>
     </div>
     )
   }
@@ -43,4 +43,4 @@ const mapDispatchToProps = (dispatch) => ({
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps)(Contract)
+  mapDispatchToProps)(Contracts)

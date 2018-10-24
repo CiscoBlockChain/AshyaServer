@@ -17,16 +17,15 @@ const Home = ({addresses}) => (
             </tr>
           </thead>
           <tbody>
-            { console.log(addresses) }
             { addresses.map( (a, index) => 
                 //string iname, string loc, string Url, address add)
                 Array.isArray(a) ?  
                   <tr key={index}>
                     <th scope="row">{ index }</th>
-                    <td><a href={"/contracts/" + a[4]}>{ a[4] }</a></td>
-                    <td>{ a[0] }</td>
+                    <td><a href={"/contracts/" + a[0]}>{ a[0] }</a></td>
                     <td>{ a[1] }</td>
-                    <td><a href={a[2]}>{ a[2] }</a></td>
+                    <td>{ a[2] }</td>
+                    <td><a href={a[3]}>{ a[3] }</a></td>
                   </tr>
                   :
                   <tr key={a}><th scope="row">{ a }</th></tr>

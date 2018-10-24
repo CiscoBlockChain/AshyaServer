@@ -1,8 +1,15 @@
 import React from 'react'
 
-const Detail = ({address,subscriberURL,handleChange,submitFunc}) => (
+const Detail = ({address,subscriberURL,handleChange,submitFunc,error}) => (
     <div className="container">
-      <br/>
+      { error ? 
+        <div className="alert alert-danger">
+          <h4 className="alert-heading">Error</h4>
+          <p>{error}</p>
+        </div>
+        :
+        <br/>
+      }
       <h2>
       <a target="_blank" href={"https://kovan.etherscan.io/address/"+address+"#code"}>{address}</a>
       </h2>
@@ -16,7 +23,7 @@ const Detail = ({address,subscriberURL,handleChange,submitFunc}) => (
             <input type="text" onChange={handleChange} className="form-control" id="subscriberURL" value={subscriberURL} placeholder="https://example.com/mycallback" />
           </div>
         </form>
-        <button className="btn btn-primary btn-lg right" disabled="true" onClick={submitFunc}>
+        <button className="btn btn-primary btn-lg right" onClick={submitFunc}>
           Subscribe
         </button>
         <br/>

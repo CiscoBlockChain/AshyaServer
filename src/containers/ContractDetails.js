@@ -73,20 +73,14 @@ class ContractDetails extends Component {
     if(validator.isURL(input.toString())){ 
       return true;
     }
-      
-    else {
-      return false;
-    }
+    return false;
 }
-<<<<<<< HEAD
 
    
      //let newContract = new this.state.provider.eth.Contract(addr,);
      //console.log(newContract)
      //console.log(deviceContract.methods)
      //deviceContract.methods.addURL(contract.addr).estimateGas({from: this.state.accounts[0], value: 1000000000000000}, this.rc0)
-=======
->>>>>>> e9806e6daa8fc3ae08afe758642d760cba054e46
 
     //TODO: Sana to add subscriber to contract.  
     // get the contract address
@@ -100,6 +94,7 @@ class ContractDetails extends Component {
     console.log("Subscribe to stuff")
      const addr = this.props.match.params.contractAddress;
      console.log(addr)
+     //an object has the same properties of the deployed address
      var newContract = new this.state.provider.eth.Contract(deviceContract.abiArray, addr); // default gas price in wei, 20 gwei in this case
 
     newContract.methods.addURL(this.state.subscriberURL).estimateGas({from: this.state.accounts[0], value: 1000000000000000}, this.rc0)
@@ -129,7 +124,7 @@ class ContractDetails extends Component {
     let account = this.state.accounts[0]
     let newContract = new this.state.provider.eth.Contract(deviceContract.abiArray, addr);
     console.log("Adding new url to this device")
-    newContract.methods.addURL(addr).send({
+    newContract.methods.addURL(this.state.subscriberURL).send({
          from: account,
          gas: this.state.gasLimit + 80000,
          gasPrice: this.state.gasPrice,
@@ -153,9 +148,9 @@ class ContractDetails extends Component {
         //console.log("got confirmation: ", confirmationNumber)
       })
       .then(function(newContractInstance){
-        console.log("Created New Contract Instance: ", newContractInstance.options.address);
-        // store contract in Ashya Device. 
-        self.props.updateContract(newContractInstance.options.address);
+        console.log("Created New Contract Instance: ", newContractInstance);
+        // store contract in Ashya Device.
+       
       })
   }
 

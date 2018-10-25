@@ -67,8 +67,15 @@ class ContractDetails extends Component {
   urlIsValid = () => {
     //TODO: Sana validate URL
     //  this.state.subscriberURL is valid
-    return true
-  }
+    var input = this.state.subscriberURL;
+    if(validator.isURL(input.toString())){ 
+      return true;
+    }
+      
+    else {
+      return false;
+    }
+}
 
   subscribe = () => {
     console.log("Subscribe to stuff")

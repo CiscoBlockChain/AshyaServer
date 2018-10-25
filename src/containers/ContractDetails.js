@@ -79,15 +79,65 @@ class ContractDetails extends Component {
 
   subscribe = () => {
     console.log("Subscribe to stuff")
-    //TODO: Sana to add subscriber to contract.  
-    // get the contract address
+     const addr = this.props.match.params.contractAddress;
+     console.log(addr)
+     var newContract = new this.state.provider.eth.Contract(deviceContract.abiArray, addr); // default gas price in wei, 20 gwei in this case
+
+    newContract.methods.addURL(this.state.subscriberURL).estimateGas({from: this.state.accounts[0], value: 1000000000000000}, this.rc0)
+ }
+ 
+ 
+ 
+ rc0 = (error, gasEstimate) => {
+    if (error) {
+      console.error("Got error with getting gas estimate")
+      console.error(error);
+      return
+    }
+    console.log("Got gas Estimate: ", gasEstimate)
+    this.setState({gasLimit: gasEstimate})
+    this.state.provider.eth.getGasPrice(this.rc1)
+  }
+
+  rc1 = (error, gasPrice) => {
+    this.setState({gasPrice: gasPrice});
+    if (error) {
+      console.error(error);
+      return
+    }
     const addr = this.props.match.params.contractAddress;
-    // look at registerContract in the AshyaApp Wizard code
-    // 1. Make a new contract from the address and bytecode. 
-    // 2. data: deviceContract.bytecode
-    // 3. estimate gas
-    // 4. get gasprice
-    // 5. now call add subscriber... addURL(addr)
+    let self = this
+    let account = this.state.accounts[0]
+    let newContract = new this.state.provider.eth.Contract(deviceContract.abiArray, addr);
+    console.log("Adding new url to this device")
+    newContract.methods.addURL(addr).send({
+         from: account,
+         gas: this.state.gasLimit + 80000,
+         gasPrice: this.state.gasPrice,
+         value:  1000000000000000,
+    }, function(error, transactionHash){
+        self.setState({contractStatus: "Submitted with Transaction Hash: ", transactionHash})
+       })
+      .on('error', function(error) {
+        console.error(error)
+        self.setState({contractStatus: "Error submitting contract: ", error})
+      })
+      .on('transactionHash', function(transactionHash) {
+        self.setState({contractStatus: "Successfully submitted transaction hash: " +  transactionHash})
+      })
+      .on('receipt', function(receipt) {
+        self.setState({contractStatus: "Contract Address: " + receipt.contractAddress})
+        console.log("got receipt! address: ", receipt.contractAddress)
+      })
+      .on('confirmation', function(confirmationNumber, receipt) {
+        self.setState({contractStatus: "Contract Address: "+ receipt.contractAddress + " Confirmation: " + confirmationNumber})
+        //console.log("got confirmation: ", confirmationNumber)
+      })
+      .then(function(newContractInstance){
+        console.log("Created New Contract Instance: ", newContractInstance.options.address);
+        // store contract in Ashya Device. 
+        self.props.updateContract(newContractInstance.options.address);
+      })
   }
 
   submitFunc = (event) => {

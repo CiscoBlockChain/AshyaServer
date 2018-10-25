@@ -78,12 +78,15 @@ class ContractDetails extends Component {
       return false;
     }
 }
+<<<<<<< HEAD
 
    
      //let newContract = new this.state.provider.eth.Contract(addr,);
      //console.log(newContract)
      //console.log(deviceContract.methods)
      //deviceContract.methods.addURL(contract.addr).estimateGas({from: this.state.accounts[0], value: 1000000000000000}, this.rc0)
+=======
+>>>>>>> e9806e6daa8fc3ae08afe758642d760cba054e46
 
     //TODO: Sana to add subscriber to contract.  
     // get the contract address

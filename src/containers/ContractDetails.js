@@ -77,19 +77,6 @@ class ContractDetails extends Component {
 }
 
    
-     //let newContract = new this.state.provider.eth.Contract(addr,);
-     //console.log(newContract)
-     //console.log(deviceContract.methods)
-     //deviceContract.methods.addURL(contract.addr).estimateGas({from: this.state.accounts[0], value: 1000000000000000}, this.rc0)
-
-    //TODO: Sana to add subscriber to contract.  
-    // get the contract address
-    // look at registerContract in the AshyaApp Wizard code
-    // 1. Make a new contract from the address and bytecode. 
-    // 2. data: deviceContract.bytecode
-    // 3. estimate gas
-    // 4. get gasprice
-    // 5. now call add subscriber... addURL(addr)
   subscribe = () => {
     console.log("Subscribe to stuff")
      const addr = this.props.match.params.contractAddress;

@@ -154,6 +154,23 @@ class ContractDetails extends Component {
       })
   }
 
+  getAllUrls = () =>
+  {
+      console.log("Getting the urls of the device")
+       const addr = this.props.match.params.contractAddress;
+       console.log(addr)
+       //an object has the same properties of the deployed address
+       var newContract = new this.state.provider.eth.Contract(deviceContract.abiArray, addr); // default gas price in wei, 20 gwei in this case
+       var count = newContract.methods.getURLCount()
+       var results = [];
+        for (let i = 0; i < count; i++) {
+          const elem = newContract.urls[i];
+          results.push(elem);
+          console.log(elem)
+        }
+  }
+
+
 
 
   submitFunc = (event) => {
@@ -177,7 +194,9 @@ class ContractDetails extends Component {
               subscriberURL={this.state.subscriberURL} 
               error={this.state.error}
               submitFunc={this.submitFunc}
+              getAllUrlss={this.getUrlsElements}
               handleChange={this.handleChange} />
+              
     </div>
     )
   }

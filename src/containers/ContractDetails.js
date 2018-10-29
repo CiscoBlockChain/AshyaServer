@@ -13,6 +13,7 @@ class ContractDetails extends Component {
     super(props);
     this.state = {
       subscriberURL : "",
+      subscribers : [], // current subscribers
       error : "",
       accounts : []
     }
@@ -24,6 +25,7 @@ class ContractDetails extends Component {
     window.addEventListener('load', function() {
       if (typeof window.web3 !== 'undefined') {
         t.validate(t)
+        t.getSubscribers()
       }else {
         t.state.error = "You have no Web3 plugins.  Consider Metamask!"
         t.forceUpdate()
@@ -141,20 +143,23 @@ class ContractDetails extends Component {
       })
   }
 
-  getAllUrls = () =>
-  {
-      console.log("Getting the urls of the device")
-       const addr = this.props.match.params.contractAddress;
-       console.log(addr)
-       //an object has the same properties of the deployed address
-       var newContract = new this.state.provider.eth.Contract(deviceContract.abiArray, addr); // default gas price in wei, 20 gwei in this case
-       var count = newContract.methods.getURLCount()
-       var results = [];
+  // get the current subscriber URLS from the contract. 
+  getSubscribers = () => {
+      const addr = this.props.match.params.contractAddress;
+      //an object has the same properties of the deployed address
+      var thisContract = new this.state.provider.eth.Contract(deviceContract.abiArray, addr); // default gas price in wei, 20 gwei in this case
+      let t = this
+      thisContract.methods.getURLCount().call(function(error, count) {
+        console.log("count of subscribers: ", count)
         for (let i = 0; i < count; i++) {
-          const elem = newContract.urls[i];
-          results.push(elem);
-          console.log(elem)
+          thisContract.methods.urls(i).call(function(error, url) {
+            console.log(url)
+            var arr = t.state.subscribers
+            arr.push(url)
+            t.setState({subscribers : arr})
+          })
         }
+      })
   }
 
 
@@ -181,7 +186,7 @@ class ContractDetails extends Component {
               subscriberURL={this.state.subscriberURL} 
               error={this.state.error}
               submitFunc={this.submitFunc}
-              getAllUrlss={this.getUrlsElements}
+              subscribers={this.state.subscribers}
               handleChange={this.handleChange} />
               
     </div>

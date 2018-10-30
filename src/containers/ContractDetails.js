@@ -15,7 +15,8 @@ class ContractDetails extends Component {
       subscriberURL : "",
       subscribers : [], // current subscribers
       error : "",
-      accounts : []
+      accounts : [],
+      loading : false
     }
   }
 
@@ -81,11 +82,11 @@ class ContractDetails extends Component {
    
   subscribe = () => {
     console.log("Subscribe to stuff")
-     const addr = this.props.match.params.contractAddress;
-     console.log(addr)
-     //an object has the same properties of the deployed address
-     var newContract = new this.state.provider.eth.Contract(deviceContract.abiArray, addr); // default gas price in wei, 20 gwei in this case
-
+    const addr = this.props.match.params.contractAddress;
+    console.log(addr)
+    //an object has the same properties of the deployed address
+    var newContract = new this.state.provider.eth.Contract(deviceContract.abiArray, addr); // default gas price in wei, 20 gwei in this case
+    this.setState({loading: true})
     newContract.methods.addURL(this.state.subscriberURL).estimateGas({from: this.state.accounts[0], value: 1000000000000000}, this.rc0)
  }
  
@@ -93,6 +94,7 @@ class ContractDetails extends Component {
  
  rc0 = (error, gasEstimate) => {
     if (error) {
+      this.setState({loading: false})
       console.error("Got error with getting gas estimate")
       console.error(error);
       return
@@ -105,6 +107,7 @@ class ContractDetails extends Component {
   rc1 = (error, gasPrice) => {
     this.setState({gasPrice: gasPrice});
     if (error) {
+      this.setState({loading: false})
       console.error(error);
       return
     }
@@ -123,7 +126,8 @@ class ContractDetails extends Component {
        })
       .on('error', function(error) {
         console.error(error)
-        self.setState({contractStatus: "Error submitting contract: ", error})
+        self.setState({contractStatus: "Contract Rejected."})
+        self.setState({loading: false})
       })
       .on('transactionHash', function(transactionHash) {
         self.setState({contractStatus: "Successfully submitted transaction hash: " +  transactionHash})
@@ -134,12 +138,10 @@ class ContractDetails extends Component {
       })
       .on('confirmation', function(confirmationNumber, receipt) {
         self.setState({contractStatus: "Contract Address: "+ receipt.contractAddress + " Confirmation: " + confirmationNumber})
-        //console.log("got confirmation: ", confirmationNumber)
       })
       .then(function(newContractInstance){
-        console.log("Created New Contract Instance: ", newContractInstance);
-        // store contract in Ashya Device.
-       
+        self.setState({loading: false})
+        self.getSubscribers()
       })
   }
 
@@ -151,6 +153,7 @@ class ContractDetails extends Component {
       let t = this
       thisContract.methods.getURLCount().call(function(error, count) {
         console.log("count of subscribers: ", count)
+        t.setState({subscribers : []})
         for (let i = 0; i < count; i++) {
           thisContract.methods.urls(i).call(function(error, url) {
             console.log(url)
@@ -187,6 +190,7 @@ class ContractDetails extends Component {
               error={this.state.error}
               submitFunc={this.submitFunc}
               subscribers={this.state.subscribers}
+              loading={this.state.loading}
               handleChange={this.handleChange} />
               
     </div>

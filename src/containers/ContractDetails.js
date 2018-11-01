@@ -86,7 +86,7 @@ class ContractDetails extends Component {
      //an object has the same properties of the deployed address
      var newContract = new this.state.provider.eth.Contract(deviceContract.abiArray, addr); // default gas price in wei, 20 gwei in this case
 
-    newContract.methods.addURL(this.state.subscriberURL).estimateGas({from: this.state.accounts[0], value: 1000000000000000}, this.rc0)
+    newContract.methods.addURL(this.state.subscriberURL).estimateGas({from: this.state.accounts[0], value: 400000000000000000 }, this.rc0)
  }
  
  
@@ -117,7 +117,7 @@ class ContractDetails extends Component {
          from: account,
          gas: this.state.gasLimit + 80000,
          gasPrice: this.state.gasPrice,
-         value:  1000000000000000,
+         value:  400000000000000000,
     }, function(error, transactionHash){
         self.setState({contractStatus: "Submitted with Transaction Hash: ", transactionHash})
        })

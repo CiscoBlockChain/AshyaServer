@@ -82,21 +82,18 @@ class ContractDetails extends Component {
    
   subscribe = () => {
     console.log("Subscribe to stuff")
-<<<<<<< HEAD
      const addr = this.props.match.params.contractAddress;
      console.log(addr)
      //an object has the same properties of the deployed address
      var newContract = new this.state.provider.eth.Contract(deviceContract.abiArray, addr); // default gas price in wei, 20 gwei in this case
 
     newContract.methods.addURL(this.state.subscriberURL).estimateGas({from: this.state.accounts[0], value: 400000000000000000 }, this.rc0)
-=======
     const addr = this.props.match.params.contractAddress;
     console.log(addr)
     //an object has the same properties of the deployed address
     var newContract = new this.state.provider.eth.Contract(deviceContract.abiArray, addr); // default gas price in wei, 20 gwei in this case
     this.setState({loading: true})
     newContract.methods.addURL(this.state.subscriberURL).estimateGas({from: this.state.accounts[0], value: 1000000000000000}, this.rc0)
->>>>>>> 1bbf845b8e9160a1983e9a8432287ef9f6c34331
  }
  
  

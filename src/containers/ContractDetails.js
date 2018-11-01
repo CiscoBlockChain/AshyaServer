@@ -88,7 +88,6 @@ class ContractDetails extends Component {
      var newContract = new this.state.provider.eth.Contract(deviceContract.abiArray, addr); // default gas price in wei, 20 gwei in this case
 
     newContract.methods.addURL(this.state.subscriberURL).estimateGas({from: this.state.accounts[0], value: 400000000000000000 }, this.rc0)
-    const addr = this.props.match.params.contractAddress;
     console.log(addr)
     //an object has the same properties of the deployed address
     var newContract = new this.state.provider.eth.Contract(deviceContract.abiArray, addr); // default gas price in wei, 20 gwei in this case

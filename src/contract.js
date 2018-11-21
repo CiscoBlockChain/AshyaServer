@@ -1,6 +1,6 @@
 // The address is the contract that is already deployed.  The ABI should come from the truffle repository whenever the contract is
 // updated.  
-export const address = "0x7cc2027ea1dc871a63525ab5cbd13df91290518f"
+export const address = "0xc63e366814b73ccf2eefe7ba2f4d50fffda0c586"
 export const abiArray = [
     {
       "inputs": [],

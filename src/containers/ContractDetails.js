@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import Detail from '../components/Detail'
 import { withRouter } from 'react-router-dom'
 import * as deviceContract from '../device-contract'
+import Loading from '../components/Loading'
 import Web3 from 'web3';
 import validator from 'validator';
 
@@ -16,20 +17,33 @@ class ContractDetails extends Component {
       subscribers : [], // current subscribers
       error : "",
       accounts : [],
-      loading : false
+      provider: "",
+      loading : false,
+      working: false,
+      workingMessage: ""
     }
   }
 
   // when the window loads, see if Metamask is there. 
   componentDidMount() {
     var t = this;
-    window.addEventListener('load', function() {
-      if (typeof window.web3 !== 'undefined') {
+    window.addEventListener('load', async () =>  {
+      // support november 2nd update:
+      // https://medium.com/metamask/https-medium-com-metamask-breaking-change-injecting-web3-7722797916a8
+      if (window.ethereum) {
+        window.web3 = new Web3(window.ethereum);
+        try {
+          await window.ethereum.enable();
+          t.validate(t)
+          t.getSubscribers()
+        } catch (error) {
+          t.setState({merror: "Metamask not enabled."})
+        }
+      }
+      else if (typeof window.web3 !== 'undefined') {
         t.validate(t)
-        t.getSubscribers()
       }else {
-        t.state.error = "You have no Web3 plugins.  Consider Metamask!"
-        t.forceUpdate()
+        console.log("no web3 provided.")
       }
     })
   }
@@ -70,99 +84,83 @@ class ContractDetails extends Component {
 
 
   urlIsValid = () => {
-    //TODO: Sana validate URL
-    //  this.state.subscriberURL is valid
     var input = this.state.subscriberURL;
     if(validator.isURL(input.toString())){ 
       return true;
     }
     return false;
-}
+  }
 
    
   subscribe = () => {
-    console.log("Subscribe to stuff")
+    let t = this
+    this.setState({working: true})
+    let account = this.state.accounts[0];
+    t.setState({workingMessage: "Use Metamask to complete transaction"})
     const addr = this.props.match.params.contractAddress;
-    console.log(addr)
     //an object has the same properties of the deployed address
     var newContract = new this.state.provider.eth.Contract(deviceContract.abiArray, addr); // default gas price in wei, 20 gwei in this case
-    this.setState({loading: true})
-    newContract.methods.addURL(this.state.subscriberURL).estimateGas({from: this.state.accounts[0], value: 1000000000000000}, this.rc0)
- }
- 
- 
- 
- rc0 = (error, gasEstimate) => {
-    if (error) {
-      this.setState({loading: false})
-      console.error("Got error with getting gas estimate")
-      console.error(error);
-      return
-    }
-    console.log("Got gas Estimate: ", gasEstimate)
-    this.setState({gasLimit: gasEstimate})
-    this.state.provider.eth.getGasPrice(this.rc1)
-  }
-
-  rc1 = (error, gasPrice) => {
-    this.setState({gasPrice: gasPrice});
-    if (error) {
-      this.setState({loading: false})
-      console.error(error);
-      return
-    }
-    const addr = this.props.match.params.contractAddress;
-    let self = this
-    let account = this.state.accounts[0]
-    let newContract = new this.state.provider.eth.Contract(deviceContract.abiArray, addr);
-    console.log("Adding new url to this device")
-    newContract.methods.addURL(this.state.subscriberURL).send({
-         from: account,
-         gas: this.state.gasLimit + 80000,
-         gasPrice: this.state.gasPrice,
-         value:  1000000000000000,
-    }, function(error, transactionHash){
-        self.setState({contractStatus: "Submitted with Transaction Hash: ", transactionHash})
-       })
-      .on('error', function(error) {
-        console.error(error)
-        self.setState({contractStatus: "Contract Rejected."})
-        self.setState({loading: false})
+    var eth = Web3.utils.toWei("0.040")
+    newContract.methods.addURL(this.state.subscriberURL).estimateGas({
+        from: account,
+        value: eth
+    })
+    .then(function(gasEstimate) {
+      t.setState({workingMessage: "Gas estimate" + gasEstimate.toString()})
+      t.setState({gasLimit: gasEstimate})
+      t.state.provider.eth.getGasPrice()
+      .then(function(gasPrice) {
+        t.setState({gasPrice: gasPrice});
+        t.setState({workingMessage: "Adding URL to Contract"})
+        newContract.methods.addURL(t.state.subscriberURL).send({
+          from: account,
+          gas: t.state.gasLimit + 800000,
+          gasPrice: t.state.gasPrice,
+          value: eth
+        }, function(error, transactionHash){
+          t.setState({workingMessage: "Submitted contract with Transaction Hash: ", transactionHash})
+        })
+        .on('error', function(error) {
+          t.setState({working : false})
+          t.setState({error: "Error submitting contract: "+ error.toString()})
+        })
+        .on('transactionHash', function(transactionHash) {
+          t.setState({workingMessage: "Successfully submitted transaction hash: " +  transactionHash})
+        })
+        .on('receipt', function(receipt) {
+          t.setState({workingMessage: "Contract Address: " + receipt.contractAddress})
+          t.setState({working : false})
+          //get subscribers after receipt is given
+          t.getSubscribers()
+        })
+        .on('confirmation', function(confirmationNumber, receipt) {
+          t.setState({workingMessage: "Contract Address: "+ receipt.contractAddress + " Confirmation: " + confirmationNumber})
+          t.setState({working : false})
+        })
       })
-      .on('transactionHash', function(transactionHash) {
-        self.setState({contractStatus: "Successfully submitted transaction hash: " +  transactionHash})
-      })
-      .on('receipt', function(receipt) {
-        self.setState({contractStatus: "Contract Address: " + receipt.contractAddress})
-        console.log("got receipt! address: ", receipt.contractAddress)
-      })
-      .on('confirmation', function(confirmationNumber, receipt) {
-        self.setState({contractStatus: "Contract Address: "+ receipt.contractAddress + " Confirmation: " + confirmationNumber})
-      })
-      .then(function(newContractInstance){
-        self.setState({loading: false})
-        self.getSubscribers()
-      })
+    })
+    .catch(function(error) {
+      t.setState({working: false})
+      t.setState({error: error.toString()})
+    })
   }
 
   // get the current subscriber URLS from the contract. 
   getSubscribers = () => {
-      const addr = this.props.match.params.contractAddress;
-      //an object has the same properties of the deployed address
-      var thisContract = new this.state.provider.eth.Contract(deviceContract.abiArray, addr); // default gas price in wei, 20 gwei in this case
-      let t = this
-      thisContract.methods.getURLCount().call(function(error, count) {
-        console.log("count of subscribers: ", count)
-        t.setState({subscribers : []})
-        for (let i = 0; i < count; i++) {
-          thisContract.methods.urls(i).call(function(error, url) {
-            console.log(url)
-            var arr = t.state.subscribers
-            arr.push(url)
-            t.setState({subscribers : arr})
-          })
-        }
-      })
+    const addr = this.props.match.params.contractAddress;
+    //an object has the same properties of the deployed address
+    var thisContract = new this.state.provider.eth.Contract(deviceContract.abiArray, addr); // default gas price in wei, 20 gwei in this case
+    let t = this
+    thisContract.methods.getURLCount().call(function(error, count) {
+      t.setState({subscribers : []})
+      for (let i = 0; i < count; i++) {
+        thisContract.methods.urls(i).call(function(error, url) {
+          var arr = t.state.subscribers
+          arr.push(url)
+          t.setState({subscribers : arr})
+        })
+      }
+    })
   }
 
 
@@ -185,6 +183,7 @@ class ContractDetails extends Component {
   render() {
     return (
     <div>
+      <Loading working={this.state.working} workingMessage={this.state.workingMessage} />
       <Detail address={this.props.match.params.contractAddress} 
               subscriberURL={this.state.subscriberURL} 
               error={this.state.error}

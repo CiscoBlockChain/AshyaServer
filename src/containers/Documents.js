@@ -1,31 +1,27 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { getAddresses } from '../actions'
-import Registry from '../components/Registry'
+import Docs from '../components/Docs'
 
-class Contracts extends Component {
+class Documents extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      addresses : this.props.addresses || [],
+      doc : this.props.doc || "",
     }
-  }
-
-  componentDidMount() {
-    this.props.getAddresses()
   }
 
   // get more examples: https://github.com/katopz/web3-react-example/blob/master/src/App.js
   componentWillReceiveProps(nextProps) {
     this.setState({
-      addresses: nextProps.addresses || [],
+      doc: nextProps.doc || [],
     })
   }
 
   render() {
     return (
     <div>
-      <Registry addresses={this.state.addresses}/>
+      <Docs addresses={this.state.doc}/>
     </div>
     )
   }
@@ -33,7 +29,8 @@ class Contracts extends Component {
 
 
 const mapStateToProps = (state, ownProps) => ({
-  addresses: state.blockchain.addresses,
+  //doc: state.documents.doc,
+  
 })
 
 const mapDispatchToProps = (dispatch) => ({
@@ -43,4 +40,4 @@ const mapDispatchToProps = (dispatch) => ({
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps)(Contracts)
+  mapDispatchToProps)(Documents)

@@ -1,4 +1,5 @@
 import React from 'react'
+import Introduction from './Intro'
 
 const Docs = ({doc}) => (
     <div className="container-fluid">
@@ -7,9 +8,13 @@ const Docs = ({doc}) => (
           <div className="sidebar-sticky">
             <ul className="nav flex-column">
               <li className="nav-item">
-                <a className="nav-link active" href="/Introduction">
-                  <span data-feather="home"></span>
-                  Introduction <span className="sr-only">(current)</span>
+                <a className={ doc === "intro" ? "nav-link active" : "nav-link"} href="/docs/intro">
+                  Introduction 
+                </a>
+              </li> 
+              <li className="nav-item">
+                <a className={ doc === "start01" ? "nav-link active" : "nav-link"} href="/docs/start01">
+                  Getting Started
                 </a>
               </li> 
             </ul>
@@ -17,7 +22,7 @@ const Docs = ({doc}) => (
         </nav>
         <main role="main" className="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
           <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-            <h1 className="h2">Dashboard</h1>
+            <Introduction />
           </div>
         </main>
       </div>

@@ -1,6 +1,7 @@
 export const GOT_ADDRESSES = 'GOT ADDRESSES'
 export const GET_ADDRESSES = 'GETTING ADDRESSES'
 export const BLOCKCHAIN_ERROR = 'BLOCKCHAIN ERROR'
+export const PAGE = 'PAGE'
 
 export const gotAddresses = (addresses) => ({
   type: GOT_ADDRESSES, 
@@ -14,4 +15,9 @@ export const getAddresses = () => ({
 export const gotError = (error) => ({
   type: BLOCKCHAIN_ERROR,
   error
+})
+
+export const setPage = (page) => ({
+  type: PAGE,
+  page: page
 })

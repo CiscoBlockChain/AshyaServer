@@ -1,27 +1,27 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { getAddresses } from '../actions'
+import { setPage } from '../actions'
 import Docs from '../components/Docs'
 
 class Documents extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      doc : this.props.doc || "",
+      page : this.props.page || "",
     }
   }
 
   // get more examples: https://github.com/katopz/web3-react-example/blob/master/src/App.js
   componentWillReceiveProps(nextProps) {
     this.setState({
-      doc: nextProps.doc || [],
+      page: nextProps.page || "", 
     })
   }
 
   render() {
     return (
     <div>
-      <Docs addresses={this.state.doc}/>
+      <Docs page={this.state.page}/>
     </div>
     )
   }
@@ -29,12 +29,11 @@ class Documents extends Component {
 
 
 const mapStateToProps = (state, ownProps) => ({
-  //doc: state.documents.doc,
-  
+  page: state.docs.page
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  getAddresses: () => dispatch(getAddresses()),
+  setPage: (page) => dispatch(setPage(page)),
 })
 
 
